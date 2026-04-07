@@ -8,3 +8,5 @@ confusion_matrix.png
 confusion_matrix.txt
 metadata.json
 mean_std.csv
+checkpoints/
+*.csv
