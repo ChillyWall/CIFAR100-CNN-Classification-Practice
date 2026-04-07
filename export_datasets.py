@@ -12,18 +12,18 @@ def export_cifar100(save_dir="./", num_to_export=10000):
     if not os.path.exists(img_dir):
         os.makedirs(img_dir)
 
-    # 2. 下载并加载原始数据 (transform=None 确保不转为 Tensor)
+    # 2. 下载并加载原始测试数据 (transform=None 确保不转为 Tensor)
     print("正在读取数据集...")
     dataset = torchvision.datasets.CIFAR100(
         root="./dataset", train=False, download=True, transform=None
     )
 
-    # 原始数据是 numpy.ndarray, 形状 (50000, 32, 32, 3)
+    # 原始数据是 numpy.ndarray, 形状 (10000, 32, 32, 3)
     raw_data = dataset.data
     targets = dataset.targets
     classes = dataset.classes
 
-    metadata = {}
+    metadata = []
 
     print(f"开始导出前 {num_to_export} 张图片...")
     for i in tqdm(range(min(num_to_export, len(raw_data)))):
@@ -43,10 +43,13 @@ def export_cifar100(save_dir="./", num_to_export=10000):
 
         # --- 记录元数据 ---
         label_idx = targets[i]
-        metadata[file_name] = {
-            "class_index": label_idx,
-            "class_name": classes[label_idx],
-        }
+        metadata.append(
+            {
+                "file_name": file_name,
+                "class_index": label_idx,
+                "class_name": classes[label_idx],
+            }
+        )
 
     # 3. 导出 JSON 文件
     json_path = os.path.join(save_dir, "metadata.json")
@@ -59,5 +62,5 @@ def export_cifar100(save_dir="./", num_to_export=10000):
 
 
 if __name__ == "__main__":
-    # 你可以修改 num_to_export 为 50000 来导出整个训练集
-    export_cifar100(num_to_export=100)
+    # 你可以修改 num_to_export 为 10000 来导出整个测试训练集
+    export_cifar100(num_to_export=10000)

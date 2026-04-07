@@ -15,7 +15,11 @@ def export_onnx(model, checkpoint):
         verbose=True,
         input_names=["input"],  # 输入节点名称
         output_names=["output"],  # 输出节点名称
-        opset_version=11,  # 算子集版本
+        opset_version=13,  # 算子集版本
+        dynamic_axes={
+            "input": {0: "batch_size"},  # 第0维 = 动态 batch
+            "output": {0: "batch_size"},  # 输出第0维也跟着动态
+        },
     )
 
 
